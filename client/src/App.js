@@ -8,6 +8,9 @@ function App() {
   const [pais, setPais] = useState("");
   const [cargo, setCargo] = useState("");
   const [anios, setAnios] = useState(0);
+  const [sueldo, setSueldo] = useState(0);
+  const [correo, setCorreo] = useState("");
+  const [telefono, setTelefono] = useState("");
 
   // lista que contenga todos los empleados que se registren
   const [registros, setRegistros] = useState([]);
@@ -21,7 +24,7 @@ function App() {
     try {
       const response = await fetch("http://localhost:3001/empleados");
       if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
       setRegistros(data);
@@ -34,7 +37,6 @@ function App() {
   useEffect(() => {
     cargarEmpleados();
   }, []); // Se sigue ejecutando solo al inicio (montaje)
-
 
   // Esta funcion se ejecuta al presionar el boton de registrar o actualizar
   const registrarDatos = async (e) => {
@@ -57,12 +59,15 @@ function App() {
               pais,
               cargo,
               anios,
+              sueldo,
+              correo,
+              telefono,
             }),
           },
         );
 
         if (response.ok) {
-          // 💡 CAMBIO CLAVE 2a: En lugar de actualizar el estado local (complejo y propenso a errores), 
+          // 💡 CAMBIO CLAVE 2a: En lugar de actualizar el estado local (complejo y propenso a errores),
           // simplemente recargamos toda la lista.
           await cargarEmpleados();
           setEditIndex(null);
@@ -87,9 +92,12 @@ function App() {
             pais,
             cargo,
             anios,
+            sueldo,
+            correo,
+            telefono,
           }),
         });
-        
+
         if (response.ok) {
           // 💡 CAMBIO CLAVE 2b: Recargamos la lista después de la creación exitosa
           await cargarEmpleados();
@@ -108,6 +116,9 @@ function App() {
     setPais("");
     setCargo("");
     setAnios(0);
+    setSueldo(0);
+    setCorreo("");
+    setTelefono("");
   };
 
   const eliminarRegistro = async (idx) => {
@@ -123,7 +134,7 @@ function App() {
       if (response.ok) {
         // 💡 CAMBIO CLAVE 3: Recargamos la lista después de la eliminación exitosa
         await cargarEmpleados();
-        
+
         // Limpiamos el modo edición si el registro eliminado era el que se estaba editando
         if (editIndex === idx) {
           setEditIndex(null);
@@ -132,6 +143,9 @@ function App() {
           setPais("");
           setCargo("");
           setAnios(0);
+          setSueldo(0);
+          setCorreo("");
+          setTelefono("");
         }
         alert("Empleado eliminado correctamente: " + empleado.id);
       } else {
@@ -149,6 +163,9 @@ function App() {
     setPais(registrar.pais);
     setCargo(registrar.cargo);
     setAnios(registrar.anios);
+    setSueldo(registrar.sueldo);
+    setCorreo(registrar.correo);
+    setTelefono(registrar.telefono);
     setEditIndex(idx);
   };
 
@@ -231,6 +248,44 @@ function App() {
                 />
               </div>
             </div>
+            <div className="form-row">
+              <div className="form-group half-width">
+                <label htmlFor="cargo">sueldo:</label>
+                <input
+                  type="text"
+                  id="sueldo"
+                  value={sueldo}
+                  onChange={(e) => setSueldo(e.target.value)}
+                  placeholder="Ej: $2000"
+                  required
+                />
+              </div>
+
+              <div className="form-group half-width">
+                <label htmlFor="correo">Correo:</label>
+                <input
+                  type="email"
+                  id="correo"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                  placeholder="Ej: correo@ejemplo.com"
+                  required
+                />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group half-width">
+                <label htmlFor="telefono">Teléfono:</label>
+                <input
+                  type="text"
+                  id="telefono"
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
+                  placeholder="Ej: +1234567890"
+                  required
+                />
+              </div>
+            </div>
 
             <button type="submit" className="btn primary-btn">
               {editIndex !== null
@@ -248,6 +303,9 @@ function App() {
                   setPais("");
                   setCargo("");
                   setAnios(0);
+                  setSueldo(0);
+                  setCorreo("");
+                  setTelefono("");
                 }}
               >
                 Cancelar Edición
@@ -273,6 +331,9 @@ function App() {
                 <p>
                   💼 {registro.cargo} ({registro.anios} años de exp.)
                 </p>
+                <p>💰 {registro.sueldo}</p>
+                <p>✉️ {registro.correo}</p>
+                <p>📞 {registro.telefono}</p>
                 <div className="actions">
                   <button
                     onClick={() => editarRegistro(idx)}
@@ -285,8 +346,7 @@ function App() {
                     className="btn small-btn delete-btn"
                   >
                     Eliminar
-                  </button
-                  >
+                  </button>
                 </div>
               </div>
             ))

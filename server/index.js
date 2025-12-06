@@ -26,47 +26,64 @@ app.get("/empleados", (req, res) => {
 app.post("/empleados", (req, res) => {
   const { nombre, edad, pais, cargo, anios } = req.body;
   const sql =
-    "INSERT INTO empleados (nombre, edad, pais, cargo, anios) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO empleados (nombre, edad, pais, cargo, anios, sueldo, correo, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-  db.query(sql, [nombre, edad, pais, cargo, anios], (err, result) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ error: "Error al guardar los datos del empleado" });
-    }
-    return res.json({
-      message: "Empleado guardado exitosamente",
-      id: result.insertId,
-      nombre,
-      edad,
-      pais,
-      cargo,
-      anios,
-    });
-  });
+  db.query(
+    sql,
+    [nombre, edad, pais, cargo, anios, sueldo, correo, telefono],
+    (err, result) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ error: "Error al guardar los datos del empleado" });
+      }
+      return res.json({
+        message: "Empleado guardado exitosamente",
+        id: result.insertId,
+        nombre,
+        edad,
+        pais,
+        cargo,
+        anios,
+        sueldo,
+        correo,
+        telefono,
+      });
+    },
+  );
 });
 
 // ruta para actualizar un empleado por id
 app.put("/empleados/:id", (req, res) => {
   const { id } = req.params;
-  const { nombre, edad, pais, cargo, anios } = req.body;
+  const { nombre, edad, pais, cargo, anios, sueldo, correo, telefono } =
+    req.body;
   const sql =
-    "UPDATE empleados SET nombre = ?, edad = ?, pais = ?, cargo = ?, anios = ? WHERE id = ?";
+    "UPDATE empleados SET nombre = ?, edad = ?, pais = ?, cargo = ?, anios = ?, sueldo = ?, correo = ?, telefono = ? WHERE id = ?";
 
-  db.query(sql, [nombre, edad, pais, cargo, anios, id], (err) => {
-    if (err) {
-      return res.status(500).json({ error: "Error al actualizar el empleado" });
-    }
-    return res.json({
-      message: "Empleado actualizado exitosamente: ",
-      id,
-      nombre,
-      edad,
-      pais,
-      cargo,
-      anios,
-    });
-  });
+  db.query(
+    sql,
+    [nombre, edad, pais, cargo, anios, sueldo, correo, telefono, id],
+    (err) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ error: "Error al actualizar el empleado" });
+      }
+      return res.json({
+        message: "Empleado actualizado exitosamente: ",
+        id,
+        nombre,
+        edad,
+        pais,
+        cargo,
+        anios,
+        sueldo,
+        correo,
+        telefono,
+      });
+    },
+  );
 });
 
 // ruta para eliminar un empleado por id
