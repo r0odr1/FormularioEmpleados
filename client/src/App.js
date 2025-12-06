@@ -277,6 +277,7 @@ function App() {
               <div className="form-group half-width">
                 <label htmlFor="telefono">Teléfono:</label>
                 <input
+                  class="a"
                   type="text"
                   id="telefono"
                   value={telefono}
